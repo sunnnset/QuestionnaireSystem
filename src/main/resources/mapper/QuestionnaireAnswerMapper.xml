@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xy.mapper.QuestionnaireAnswerMapper">
+
+    <resultMap id="QAndQA" type="Questionnaire">
+        <result column="qaID" property="questionnaireID"/>
+        <result column="qaTitle" property="title"/>
+        <result column="qaDesc" property="description"/>
+        <result column="qaDate" property="createDate"/>
+        <result column="qaLogin" property="needLogin"/>
+        <result column="qaUser" property="userID"/>
+        <collection property="questions" ofType="Question">
+            <result column="qID" property="questionID"/>
+            <result column="qDesc" property="description"/>
+            <result column="qType" property="questionType"/>
+            <result column="qRequired" property="required"/>
+            <result column="qAType" property="answerType"/>
+            <result column="qMChoice" property="isMultipleChoice"/>
+            <result column="qChoices" property="choices"/>
+            <result column="qFType" property="fileType"/>
+            <result column="qaID" property="questionnaireID"/>
+            <result column="qOrder" property="questionOrder"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="QaAnswerAndQAnswer" type="QuestionnaireAnswer">
+        <result column="QaAnswerID" property="answerID"/>
+        <result column="QaQuestionnaireID" property="questionnaireID"/>
+        <result column="QaUserID" property="userID"/>
+        <result column="QaAnswerDate" property="answerDate"/>
+        <collection property="answers" ofType="QuestionAnswer">
+            <result column="QAnswerID" property="answerID"/>
+            <result column="QAnswerOrder" property="answerOrder"/>
+            <result column="Q_QaID" property="questionnaireAnswerID"/>
+            <result column="QAnswer" property="answer"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="getQaAnswerByID" resultMap="QaAnswerAndQAnswer">
+        select  qa.answer_id QaAnswerID, qa.questionnaire_id QaQuestionnaireID, qa.user_id QaUserID, qa.answer_date QaAnswerDate,
+                q.answer_id QAnswerID, q.answer_order QAnswerOrder, q.questionnaire_answer_id Q_QAID, q.answer QAnswer
+        from signupsystem.questionnaire_answer qa, signupsystem.question_answer q
+        where qa.answer_id = #{ID} and qa.answer_id = q.questionnaire_answer_id;
+    </select>
+
+    <resultMap id="QaAnswer" type="QuestionnaireAnswer">
+        <result property="answerID" column="answer_id"/>
+        <result property="questionnaireID" column="questionnaire_id"/>
+        <result property="userID" column="user_id"/>
+        <result property="answerDate" column="answer_date"/>
+    </resultMap>
+
+    <select id="getQaAnswerBodyByID" resultMap="QaAnswer">
+        select * from signupsystem.questionnaire_answer where answer_id = #{ID};
+    </select>
+
+    <select id="getQaAnswerBodiesByUserID" resultMap="QaAnswer">
+        select * from signupsystem.questionnaire_answer where user_id = #{ID};
+    </select>
+
+    <insert id="addQaAnswerBody" parameterType="QuestionnaireAnswer" useGeneratedKeys="true" keyProperty="answerID" keyColumn="answer_id">
+        insert into signupsystem.questionnaire_answer (questionnaire_id, user_id, answer_date)
+        values (#{questionnaireID}, #{userID}, #{answerDate})
+    </insert>
+
+    <update id="updateQaAnswerBody" parameterType="QuestionnaireAnswer">
+        update signupsystem.questionnaire_answer set
+        questionnaire_id = #{questionnaireID}, user_id = #{userID}, answer_date = #{answerDate}
+        where answer_id = #{answerID};
+    </update>
+
+    <delete id="deleteQaAnswer">
+        delete from signupsystem.questionnaire_answer where answer_id = #{ID};
+    </delete>
+
+
+</mapper>

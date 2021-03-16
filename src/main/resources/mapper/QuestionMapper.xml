@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xy.mapper.QuestionMapper">
+
+    <resultMap id="IDMap" type="Question">
+        <result column="description" property="description"/>
+        <result column="question_id" property="questionID"/>
+        <result column="question_type" property="questionType"/>
+        <result column="required" property="required"/>
+        <result column="answer_type" property="answerType"/>
+        <result column="is_multiple_choice" property="isMultipleChoice"/>
+        <result column="choices" property="choices"/>
+        <result column="file_type" property="fileType"/>
+        <result column="questionnaire_id" property="questionnaireID"/>
+        <result column="question_order" property="questionOrder"/>
+    </resultMap>
+
+    <insert id="addQuestion" parameterType="Question" useGeneratedKeys="true" keyProperty="questionID" keyColumn="question_id">
+        insert into signupsystem.question (description, question_type, required, answer_type,
+                                           is_multiple_choice, choices, file_type,
+                                           questionnaire_id, question_order)
+        values (#{description}, #{questionType}, #{answerType}, #{required}, #{isMultipleChoice},
+                #{choices}, #{fileType}, #{questionnaireID}, #{questionOrder});
+    </insert>
+
+    <insert id="addQuestions" parameterType="java.util.List">
+        insert into signupsystem.question (description, question_type, required, answer_type, is_multiple_choice, choices, file_type, questionnaire_id, question_order) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.description}, #{item.questionType}, #{item.required}, #{item.answerType}, #{item.isMultipleChoice},
+             #{item.choices}, #{item.fileType}, #{item.questionnaireID}, #{item.questionOrder})
+        </foreach>
+    </insert>
+
+    <select id="queryQuestionByID" resultMap="IDMap">
+        select * from signupsystem.question where question_id = #{questionID};
+    </select>
+
+    <select id="queryQuestionsByQnaireID" resultMap="IDMap">
+        select * from signupsystem.question where questionnaire_id = #{qnaireID};
+    </select>
+
+    <delete id="deleteQuestionByID" parameterType="int">
+        delete from signupsystem.question where question_id = #{questionID};
+    </delete>
+
+    <update id="updateQuestion" parameterType="Question">
+        update signupsystem.question set
+        description = #{description}, question_type = #{questionType}, required = #{required}, answer_type = #{answerType},
+                                         is_multiple_choice = #{isMultipleChoice}, choices = #{choices},
+                                         file_type = #{fileType}, questionnaire_id = #{questionnaireID},
+                                         question_order = #{questionOrder}
+        where question_id = #{questionID};
+    </update>
+
+</mapper>

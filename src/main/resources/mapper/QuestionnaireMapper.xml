@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xy.mapper.QuestionnaireMapper">
+
+    <insert id="addQuestionnaire" useGeneratedKeys="true" keyProperty="questionnaireID" keyColumn="questionnaire_id" parameterType="Questionnaire">
+        insert into signupsystem.questionnaire (title, description, create_date, need_login, user_id)
+        values (#{title}, #{description}, #{createDate}, #{needLogin}, #{userID})
+    </insert>
+
+    <update id="updateQuestionnaire" parameterType="Questionnaire">
+        update signupsystem.questionnaire set
+        title = #{title}, description = #{description}, create_date = #{createDate},
+        need_login = #{needLogin}, user_id = #{userID} where questionnaire_id = #{questionnaireID};
+    </update>
+
+    <resultMap id="qaMap" type="Questionnaire">
+        <result column="questionnaire_id" property="questionnaireID"/>
+        <result column="title" property="title"/>
+        <result column="description" property="description"/>
+        <result column="create_date" property="createDate"/>
+        <result column="need_login" property="needLogin"/>
+        <result column="user_id" property="userID"/>
+    </resultMap>
+
+    <select id="queryQuestionnaireBodyByID" resultMap="qaMap">
+        select * from signupsystem.questionnaire where questionnaire_id = #{ID}
+    </select>
+
+    <select id="queryQuestionnaireByID" resultMap="QAndQA">
+        select q.question_id qID, q.description qDesc, q.question_type qType, q.required qRequired, q.answer_type qAType,
+               q.is_multiple_choice qMChoice, q.choices qChoices, q.file_type qFType, q.question_order qOrder,
+               qa.questionnaire_id qaID, qa.title qaTitle, qa.description qaDesc, qa.create_date qaDate,
+               qa.need_login qaLogin, qa.user_id qaUser
+        from signupsystem.questionnaire qa, signupsystem.question q
+        where q.questionnaire_id = qa.questionnaire_id and qa.questionnaire_id = #{ID};
+    </select>
+
+    <select id="queryQuestionnaireBodyByUserID" resultMap="qaMap">
+        select * from signupsystem.questionnaire where user_id = #{userID};
+    </select>
+
+    <delete id="deleteQuestionnaireByID">
+        delete from signupsystem.questionnaire where questionnaire_id = #{ID};
+    </delete>
+
+    <resultMap id="QAndQA" type="Questionnaire">
+        <result column="qaID" property="questionnaireID"/>
+        <result column="qaTitle" property="title"/>
+        <result column="qaDesc" property="description"/>
+        <result column="qaDate" property="createDate"/>
+        <result column="qaLogin" property="needLogin"/>
+        <result column="qaUser" property="userID"/>
+        <collection property="questions" ofType="Question">
+            <result column="qID" property="questionID"/>
+            <result column="qDesc" property="description"/>
+            <result column="qType" property="questionType"/>
+            <result column="qRequired" property="required"/>
+            <result column="qAType" property="answerType"/>
+            <result column="qMChoice" property="isMultipleChoice"/>
+            <result column="qChoices" property="choices"/>
+            <result column="qFType" property="fileType"/>
+            <result column="qaID" property="questionnaireID"/>
+            <result column="qOrder" property="questionOrder"/>
+        </collection>
+    </resultMap>
+
+</mapper>

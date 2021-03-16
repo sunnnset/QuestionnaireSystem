@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xy.mapper.QuestionAnswerMapper">
+
+
+    <resultMap id="QuestionAnswerMap" type="QuestionAnswer">
+        <result property="answerID" column="answer_id"/>
+        <result property="answerOrder" column="answer_order"/>
+        <result property="questionnaireAnswerID" column="questionnaire_answer_id"/>
+        <result property="answer" column="answer"/>
+    </resultMap>
+
+    <select id="getQAByID" resultMap="QuestionAnswerMap">
+        select * from signupsystem.question_answer where answer_id = #{ID};
+    </select>
+
+    <select id="getQAsByQuestionnaireAnswerID" resultMap="QuestionAnswerMap">
+        select * from signupsystem.question_answer where questionnaire_answer_id = #{questionnaireAnswerID};
+    </select>
+
+    <delete id="deleteQA" >
+        delete from signupsystem.question_answer where answer_id = #{ID};
+    </delete>
+
+    <update id="updateQA" >
+        update signupsystem.question_answer set
+        answer_order = #{answerOrder}, questionnaire_answer_id = #{questionnaireAnswerID}, answer = #{answer}
+        where answer_id = #{answerID};
+    </update>
+
+    <insert id="addQA" useGeneratedKeys="true" keyProperty="answerID" keyColumn="answer_id">
+        insert into signupsystem.question_answer (answer_order, questionnaire_answer_id, answer) VALUES
+        (#{answerOrder}, #{questionnaireAnswerID}, #{answer});
+    </insert>
+
+    <insert id="addQAs" >
+        insert into signupsystem.question_answer (answer_order, questionnaire_answer_id, answer) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.answerOrder}, #{item.questionnaireAnswerID}, #{item.answer})
+        </foreach>
+    </insert>
+
+
+</mapper>

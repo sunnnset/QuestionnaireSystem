@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xy.auth.mapper.UserTokenMapper">
+
+    <resultMap id="UserTokenMap" type="com.xy.auth.pojo.UserToken">
+        <result column="user_id" property="userID"/>
+        <result column="token" property="token"/>
+        <result column="create_time" property="createTime"/>
+        <result column="expire_time" property="expireTime"/>
+    </resultMap>
+
+    <select id="getUserTokenByUserID" resultMap="UserTokenMap">
+        select * from signupsystem.user_token where user_id = #{userID};
+    </select>
+
+    <select id="getUserTokenByToken" resultMap="UserTokenMap">
+        select * from signupsystem.user_token where token = #{token};
+    </select>
+
+    <insert id="addUserToken" parameterType="com.xy.auth.pojo.UserToken">
+        insert into signupsystem.user_token (user_id, token, create_time, expire_time) VALUES
+        (#{userID}, #{token}, #{createTime}, #{expireTime});
+    </insert>
+
+    <update id="updateUserToken" parameterType="com.xy.auth.pojo.UserToken">
+        update signupsystem.user_token set
+        token = #{token}, create_time = #{createTime}, expire_time = #{expireTime}
+        where user_id = #{userID};
+    </update>
+
+    <delete id="deleteUserToken">
+        delete from signupsystem.user_token where user_id = #{userID};
+    </delete>
+
+</mapper>
