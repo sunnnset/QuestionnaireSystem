@@ -19,6 +19,7 @@ public class QuestionnaireAnswerServiceImpl implements QuestionnaireAnswerServic
     private QuestionAnswerMapper answerMapper;
 
     @Override
+    // 添加问卷回答和所有的问题回答
     public int addFullQuestionnaireAnswer(QuestionnaireAnswer questionnaireAnswer) {
         // 返回添加问卷回答的id
         // 先添加问卷回答

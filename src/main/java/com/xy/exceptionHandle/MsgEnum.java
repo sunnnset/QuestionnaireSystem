@@ -17,7 +17,11 @@ public enum MsgEnum {
 
     LOGIN_SUCCESS(200, "登录成功"),
     REGISTER_SUCCESS(200, "注册成功"),
-    USER_NAME_EXIST(444, "用户名已存在");
+    USER_NAME_EXIST(444, "用户名已存在"),
+
+    EMPTY_FILE(444, "文件为空"),
+    UPLOAD_FAILURE(444, "文件上传失败"),
+    UPLOAD_SUCCESS(200, "文件上传成功");
 
 
 

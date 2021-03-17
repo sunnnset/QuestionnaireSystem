@@ -48,12 +48,13 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.1.4</version>
         </dependency>
-        <dependency>
-            <!--支持热更新，修改类后JVM会直接加载新的类-->
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional> <!-- 这个需要为 true 热部署才有效 -->
-        </dependency>
+
+<!--        <dependency>-->
+<!--            &lt;!&ndash;支持热更新，修改类后JVM会直接加载新的类&ndash;&gt;-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-devtools</artifactId>-->
+<!--            <optional>false</optional> &lt;!&ndash; 这个需要为 true 热部署才有效 &ndash;&gt;-->
+<!--        </dependency>-->
 
     </dependencies>
 

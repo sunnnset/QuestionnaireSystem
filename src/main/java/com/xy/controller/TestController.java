@@ -3,13 +3,20 @@ package com.xy.controller;
 
 import com.xy.exceptionHandle.MessageResponse;
 import com.xy.exceptionHandle.MsgEnum;
+import com.xy.exceptionHandle.ServerException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @RequestMapping("/test")
 @Controller
 public class TestController {
@@ -32,9 +39,18 @@ public class TestController {
 
     @PostMapping("/upload")
     @ResponseBody
-    public String fileUploadTest(String fileName, MultipartFile file){
+    public MessageResponse fileUploadTest(@RequestParam("file") MultipartFile file) throws IOException {
+        if (file.isEmpty()) {throw new ServerException(MsgEnum.EMPTY_FILE);}
+        String fileName = file.getOriginalFilename();
+        String filePath = ResourceUtils.getURL("classpath:").getPath();
+        File fileRecv = new File(filePath+"/file/"+fileName);
+        if (!fileRecv.getParentFile().exists())
+            fileRecv.getParentFile().mkdir();
+        System.out.println("文件上传路径："+fileRecv.getAbsolutePath());
+        fileRecv.createNewFile();
+        file.transferTo(fileRecv);
 
-        return "success";
+        return new MessageResponse(MsgEnum.UPLOAD_SUCCESS);
     }
 
     @RequestMapping("/msgResponse")
