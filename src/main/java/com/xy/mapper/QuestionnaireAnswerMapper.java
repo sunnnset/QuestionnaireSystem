@@ -15,6 +15,8 @@ public interface QuestionnaireAnswerMapper {
     // 通过用户ID，获取某用户填写的所有问卷答案
     List<QuestionnaireAnswer> getQaAnswerBodiesByUserID(int userID);
 
+    List<QuestionnaireAnswer> getFullQaAnswersByQuestionnaireID(int questionnaireID, int min, int max);
+
     int addQaAnswerBody(QuestionnaireAnswer qaAnswer);
 
     int updateQaAnswerBody(QuestionnaireAnswer qaAnswer);

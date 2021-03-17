@@ -38,10 +38,17 @@ public class QuestionnaireAnswerController {
     }
 
     @RequestMapping("/getBodiesByUID")
-    // 根据用户id，获取该用户的所有问卷回答（不包括
+    // 根据用户id，获取该用户的所有问卷回答（不包括具体的问题）
     public List<QuestionnaireAnswer> getQuestionnaireAnswerBodiesByUserID(int uid){
         List<QuestionnaireAnswer> list = service.getQuestionnaireAnswerBodiesByUserID(uid);
         if (list == null) { throw new ServerException(MsgEnum.ITEM_NOT_FOUND);}
+        return list;
+    }
+
+    @RequestMapping("/getByQID")
+    public List<QuestionnaireAnswer> getFullQaAnswersByQuestionnaireID(int qid, int num, int offset){
+        List<QuestionnaireAnswer> list = service.getFullQaAnswersByQuestionnaireID(qid, num, offset);
+        if (list == null) {throw new ServerException(MsgEnum.ITEM_NOT_FOUND);}
         return list;
     }
 

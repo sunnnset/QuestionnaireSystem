@@ -15,6 +15,8 @@ public interface QuestionnaireAnswerService {
 
     QuestionnaireAnswer getQuestionnaireAnswerBodyByID(int QaAnswerID);
 
+    List<QuestionnaireAnswer> getFullQaAnswersByQuestionnaireID(int questionnaireID, int num, int offset);
+
     List<QuestionnaireAnswer> getQuestionnaireAnswerBodiesByUserID(int userID);
 
     int deleteQuestionnaireAnswerByID(int QaAnswerID);

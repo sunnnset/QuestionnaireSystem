@@ -62,6 +62,12 @@ public class QuestionnaireAnswerServiceImpl implements QuestionnaireAnswerServic
     }
 
     @Override
+    public List<QuestionnaireAnswer> getFullQaAnswersByQuestionnaireID(int questionnaireID, int num, int offset) {
+
+        return qaAnswerMapper.getFullQaAnswersByQuestionnaireID(questionnaireID, offset, num+offset);
+    }
+
+    @Override
     public int deleteQuestionnaireAnswerByID(int QaAnswerID) {
         qaAnswerMapper.deleteQaAnswer(QaAnswerID);
         return 0;

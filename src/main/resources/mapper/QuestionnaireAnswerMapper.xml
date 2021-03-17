@@ -5,26 +5,26 @@
 
 <mapper namespace="com.xy.mapper.QuestionnaireAnswerMapper">
 
-    <resultMap id="QAndQA" type="Questionnaire">
-        <result column="qaID" property="questionnaireID"/>
-        <result column="qaTitle" property="title"/>
-        <result column="qaDesc" property="description"/>
-        <result column="qaDate" property="createDate"/>
-        <result column="qaLogin" property="needLogin"/>
-        <result column="qaUser" property="userID"/>
-        <collection property="questions" ofType="Question">
-            <result column="qID" property="questionID"/>
-            <result column="qDesc" property="description"/>
-            <result column="qType" property="questionType"/>
-            <result column="qRequired" property="required"/>
-            <result column="qAType" property="answerType"/>
-            <result column="qMChoice" property="isMultipleChoice"/>
-            <result column="qChoices" property="choices"/>
-            <result column="qFType" property="fileType"/>
-            <result column="qaID" property="questionnaireID"/>
-            <result column="qOrder" property="questionOrder"/>
-        </collection>
-    </resultMap>
+<!--    <resultMap id="QAndQA" type="Questionnaire">-->
+<!--        <result column="qaID" property="questionnaireID"/>-->
+<!--        <result column="qaTitle" property="title"/>-->
+<!--        <result column="qaDesc" property="description"/>-->
+<!--        <result column="qaDate" property="createDate"/>-->
+<!--        <result column="qaLogin" property="needLogin"/>-->
+<!--        <result column="qaUser" property="userID"/>-->
+<!--        <collection property="questions" ofType="Question">-->
+<!--            <result column="qID" property="questionID"/>-->
+<!--            <result column="qDesc" property="description"/>-->
+<!--            <result column="qType" property="questionType"/>-->
+<!--            <result column="qRequired" property="required"/>-->
+<!--            <result column="qAType" property="answerType"/>-->
+<!--            <result column="qMChoice" property="isMultipleChoice"/>-->
+<!--            <result column="qChoices" property="choices"/>-->
+<!--            <result column="qFType" property="fileType"/>-->
+<!--            <result column="qaID" property="questionnaireID"/>-->
+<!--            <result column="qOrder" property="questionOrder"/>-->
+<!--        </collection>-->
+<!--    </resultMap>-->
 
     <resultMap id="QaAnswerAndQAnswer" type="QuestionnaireAnswer">
         <result column="QaAnswerID" property="answerID"/>
@@ -62,6 +62,40 @@
         select * from signupsystem.questionnaire_answer where user_id = #{ID};
     </select>
 
+    <resultMap id="QaAnswerSet" type="QuestionnaireAnswer">
+        <result property="answerID" column="qaa_answer_id"/>
+        <result property="questionnaireID" column="questionnaire_id"/>
+        <result property="userID" column="user_id"/>
+        <result property="answerDate" column="answer_date"/>
+        <collection property="answers" ofType="QuestionAnswer" javaType="java.util.List">
+            <result property="answerID" column="qa_answer_id"/>
+            <result property="answerOrder" column="answer_order"/>
+            <result property="questionnaireAnswerID" column="questionnaire_answer_id"/>
+            <result property="answer" column="answer"/>
+        </collection>
+    </resultMap>
+    
+    <select id="getFullQaAnswersByQuestionnaireID" resultMap="QaAnswerSet">
+        select * from (
+                   select qaA.answer_id qaa_answer_id,
+                          qaA.questionnaire_id,
+                          qaA.user_id,
+                          qaA.answer_date,
+                          qa.answer_id  qa_answer_id,
+                          qa.answer_order,
+                          qa.questionnaire_answer_id,
+                          qa.answer,
+                          dense_rank() over (order by questionnaire_answer_id) as qaid_rank
+                   from signupsystem.questionnaire_answer qaA
+                            left join signupsystem.question_answer qA
+                                      on qA.questionnaire_answer_id = qaA.answer_id
+                   where qaA.questionnaire_id = #{questionnaireID}
+                   order by questionnaire_answer_id asc, answer_order asc
+        ) as xxx where qaid_rank > #{min} and qaid_rank  &lt;= #{max};
+    </select>
+
+
+
     <insert id="addQaAnswerBody" parameterType="QuestionnaireAnswer" useGeneratedKeys="true" keyProperty="answerID" keyColumn="answer_id">
         insert into signupsystem.questionnaire_answer (questionnaire_id, user_id, answer_date)
         values (#{questionnaireID}, #{userID}, #{answerDate})
@@ -70,7 +104,8 @@
     <update id="updateQaAnswerBody" parameterType="QuestionnaireAnswer">
         update signupsystem.questionnaire_answer set
         questionnaire_id = #{questionnaireID}, user_id = #{userID}, answer_date = #{answerDate}
-        where answer_id = #{answerID};
+        where answer_id = #{answerID}
+        limit #{num} offset #{offset};
     </update>
 
     <delete id="deleteQaAnswer">

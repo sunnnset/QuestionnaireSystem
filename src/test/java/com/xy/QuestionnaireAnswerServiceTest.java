@@ -17,6 +17,8 @@ import java.util.List;
 public class QuestionnaireAnswerServiceTest {
     @Autowired
     private QuestionnaireAnswerService service;
+    @Autowired
+    private QuestionnaireAnswerMapper mapper;
 
     @Test
     public void getQaAnswerTest(){
@@ -46,5 +48,14 @@ public class QuestionnaireAnswerServiceTest {
         QuestionnaireAnswer questionnaireAnswerByID = service.getQuestionnaireAnswerByID(7);
         questionnaireAnswerByID.setUserID(1);
         service.updateQuestionnaireAnswer(questionnaireAnswerByID);
+    }
+
+    @Test
+    public void getFullQaAnswersByQuestionnaireID(){
+        //List<QuestionnaireAnswer> list = mapper.getFullQaAnswersByQuestionnaireID(42);
+        List<QuestionnaireAnswer> list = service.getFullQaAnswersByQuestionnaireID(42, 1, 1);
+        for (QuestionnaireAnswer questionnaireAnswer : list) {
+            System.out.println(questionnaireAnswer);
+        }
     }
 }

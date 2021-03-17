@@ -49,6 +49,18 @@
             <version>2.1.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.0.0</version>
+        </dependency>
+
 <!--        <dependency>-->
 <!--            &lt;!&ndash;支持热更新，修改类后JVM会直接加载新的类&ndash;&gt;-->
 <!--            <groupId>org.springframework.boot</groupId>-->

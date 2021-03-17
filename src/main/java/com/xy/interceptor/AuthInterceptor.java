@@ -37,13 +37,13 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         String URI = request.getRequestURI();
-        if (URI.contains("auth") || URI.contains("get") || URI.contains("questionnaireAnswer/add") || URI.contains("test") || URI.contains(".html")){
+        if (URI.contains(".html") || URI.contains(".js") || URI.contains(".png") || URI.contains("get") || URI.contains("questionnaireAnswer/add") || URI.contains("test")){
             System.out.println("访问了 "+URI+" 接口，放行");
             return true;
         }
         System.out.println("进入拦截器");
         // 放行登录相关的接口
-        if (request.getRequestURI().contains("login")){
+        if (request.getRequestURI().contains("auth")){
             System.out.println("登录相关接口，已放行");
             return true;
         }
