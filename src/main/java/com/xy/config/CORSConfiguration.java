@@ -12,10 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 @Configuration
 public class CORSConfiguration extends WebMvcConfigurationSupport {
 
-    private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
-            "classpath:/META-INF/resources/", "classpath:/resources/",
-            "classpath:/static/", "classpath:/public/" };
-
     @Autowired
     private AuthInterceptor authInterceptor;
 
@@ -32,24 +28,9 @@ public class CORSConfiguration extends WebMvcConfigurationSupport {
     }
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        if (!registry.hasMappingForPattern("/webjars/**")) {
-            registry.addResourceHandler("/webjars/**").addResourceLocations(
-                    "classpath:/META-INF/resources/webjars/");
-        }
-        if (!registry.hasMappingForPattern("/**")) {
-            registry.addResourceHandler("/**").addResourceLocations(
-                    CLASSPATH_RESOURCE_LOCATIONS);
-        }
-
-    }
-
-
-    @Override
     public void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(authInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/ttt/**");
+                .addPathPatterns("/**");
         // .excludePatterns()   "/auth/*"
     }
 
